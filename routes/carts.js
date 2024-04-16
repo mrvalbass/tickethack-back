@@ -23,12 +23,7 @@ router.post("/", (req, res) => {
 
 router.delete("/:id", (req, res) => {
   Cart.deleteOne({ trip_id: req.params.id }).then((data) => {
-    console.log(data);
-    if (data.deletedCount > 0) {
-      res.json((result = true));
-    } else {
-      res.json((result = false));
-    }
+    res.json({ result: data.deletedCount > 0 });
   });
 });
 
@@ -36,11 +31,6 @@ module.exports = router;
 
 router.delete("/", (req, res) => {
   Cart.deleteMany().then((data) => {
-    console.log(data);
-    if (data.deletedCount > 0) {
-      res.json((result = true));
-    } else {
-      res.json((result = false));
-    }
+    res.json({ result: data.deletedCount > 0 });
   });
 });
