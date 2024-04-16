@@ -14,9 +14,11 @@ router.get("/", (req, res) => {
       $gte: today,
       $lt: tomorrow,
     },
-  }).then((data) => {
-    res.json({ allTripsByDestination: data });
-  });
+  })
+    .sort("date 1")
+    .then((data) => {
+      res.json({ allTripsByDestination: data });
+    });
 });
 
 module.exports = router;
