@@ -8,8 +8,8 @@ router.get("/", (req, res) => {
     new Date(req.query.date).setDate(today.getDate() + 1)
   );
   Trip.find({
-    departure: req.query.departure,
-    arrival: req.query.arrival,
+    departure: { $regex: new RegExp(req.query.departure, `i`) },
+    arrival: { $regex: new RegExp(req.query.arrival, `i`) },
     date: {
       $gte: today,
       $lt: tomorrow,
