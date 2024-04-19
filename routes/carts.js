@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const Cart = require("../models/carts");
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 /* GET all trips listed in cart. */
-router.get("/", (req, res) => {
-  Cart.find()
+router.get("/:userId", (req, res) => {
+  Cart.find({ user_id: new ObjectId(req.params.userId) })
     .populate("trip_id")
     .then((data) => {
       res.json({ allTripsInCart: data.map((obj) => obj.trip_id) });
@@ -12,17 +14,19 @@ router.get("/", (req, res) => {
 });
 
 /* POST add a trip in cart. */
-router.post("/", (req, res) => {
-  const newCart = new Cart({
+router.post("/", async (req, res) => {
+  await new Cart({
     trip_id: req.body.trip_id,
-  });
-  newCart.save().then((data) => {
-    res.json({ trip_id: data });
-  });
+    user_id: req.body.user_id,
+  }).save();
+  res.json({ result: true });
 });
 
-router.delete("/:id", (req, res) => {
-  Cart.deleteOne({ trip_id: req.params.id }).then((data) => {
+router.delete("/:tripId/:userId", (req, res) => {
+  Cart.deleteOne({
+    trip_id: req.params.tripId,
+    user_id: req.params.userId,
+  }).then((data) => {
     res.json({ result: data.deletedCount > 0 });
   });
 });

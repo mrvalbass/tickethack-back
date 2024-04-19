@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const Booking = require("../models/bookings");
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 /* GET all trips listed in booking. */
-router.get("/", (req, res) => {
-  Booking.find()
+router.get("/:userId", (req, res) => {
+  Booking.find({ user_id: new ObjectId(req.params.userId) })
     .populate("trip_id")
     .then((data) => {
       res.json({ allTripsInBooking: data.map((obj) => obj.trip_id) });
@@ -13,10 +15,10 @@ router.get("/", (req, res) => {
 
 /* POST */
 router.post("/", (req, res) => {
-  console.log(typeof req.body.trip_id);
   req.body.trip_id.split(",").forEach((id) => {
     const newBooking = new Booking({
       trip_id: id,
+      user_id: req.body.user_id,
     });
     newBooking.save().then((data) => {});
   });
