@@ -4,8 +4,8 @@ const User = require("../models/users");
 
 router.post("/", async (req, res) => {
   try {
-    await new User(req.body).save();
-    res.json({ result: true });
+    const user = await new User(req.body).save();
+    res.json({ result: true, user });
   } catch (error) {
     if (error.message.includes("Missing")) {
       return res.json({ error: "Missing Field" });
